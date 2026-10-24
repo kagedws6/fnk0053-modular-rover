@@ -64,5 +64,5 @@ for x,d,label in [(-17,3.2,'3.2'),(0,3.4,'3.4'),(17,3.6,'3.6')]:
  base=base.difference(Point(x,2).buffer(d/2,quad_segs=24));marks.append(text_shape(label,x,-6,0.65))
 marks=unary_union(marks);assert base.covers(marks)
 report.append(export('m3-clearance-sample',base,marks))
-(OUT/'mesh-validation.json').write_text(json.dumps(report,indent=2))
+(OUT/'mesh-validation.json').write_text(json.dumps(report,indent=2),encoding='utf-8',newline='\n')
 print(json.dumps(report,indent=2))

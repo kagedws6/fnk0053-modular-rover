@@ -97,11 +97,11 @@ for y in [-22,0,22]:
 
 model=dict(revision='A',units='mm',status='Concept only -- dimensions and fit unverified',frame=[238,132],overall=[244,193,150],parts=parts)
 raw=json.dumps(model,separators=(',',':'))
-(ROOT/'concept-model.json').write_text(raw,encoding='utf-8')
+(ROOT/'concept-model.json').write_text(raw,encoding='utf-8',newline='\n')
 template=(ROOT/'viewer-template.html').read_text(encoding='utf-8')
 html=template.replace('/*MODEL_DATA*/',raw)
 VIS.mkdir(parents=True,exist_ok=True)
-(VIS/'rover-chassis-concept.html').write_text(html,encoding='utf-8')
+(VIS/'rover-chassis-concept.html').write_text(html,encoding='utf-8',newline='\n')
 assert '/*MODEL_DATA*/' not in html
 assert len(html.encode())<1000000
 print(json.dumps(dict(parts=len(parts),faces=sum(len(p['faces']) for p in parts),bytes=len(html.encode()),preview=str(VIS/'rover-chassis-concept.html'))))
