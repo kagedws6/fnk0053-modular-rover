@@ -1,0 +1,73 @@
+<div id="rover-concept-a">
+  <div class="viz-row"><h3>Modular rover · concept A</h3><span class="viz-badge">Fit unverified</span></div>
+  <div class="viz-controls" aria-label="View controls">
+    <button class="btn" type="button" data-view="perspective" aria-pressed="true">Three-quarter</button>
+    <button class="btn" type="button" data-view="top" aria-pressed="false">Top</button>
+    <button class="btn" type="button" data-view="side" aria-pressed="false">Side</button>
+    <label class="form-check"><input class="form-check-input" type="checkbox" data-electronics checked><span class="form-check-label">Components</span></label>
+  </div>
+  <canvas class="cursor-interaction" aria-label="Rotatable 3D concept of the rover chassis. Drag to rotate; select a component to read its description." role="img"></canvas>
+  <div class="viz-controls"><label class="form-label">Separate layers <span class="tabular-nums" data-explode-value>0 mm</span><input class="form-range" data-explode type="range" min="0" max="45" value="0" step="1"></label></div>
+  <div class="viz-row text-small"><span><span class="key frame-key"></span>New frame &amp; deck</span><span><span class="key mount-key"></span>Replaceable adapters &amp; bumpers</span><span><span class="key stock-key"></span>Existing hardware</span></div>
+  <div class="text-small" data-detail aria-live="polite">Drag to rotate · select a part for details. Front is the camera end.</div>
+  <div class="text-small">Proposed frame: 238 × 132 mm · all component dimensions estimated · colors are illustrative</div>
+  <span class="palette" data-color="frame" style="color:var(--blue)"></span><span class="palette" data-color="mount" style="color:var(--orange)"></span><span class="palette" data-color="wheel" style="color:color-mix(in srgb,var(--foreground) 30%,var(--background))"></span><span class="palette" data-color="tread" style="color:color-mix(in srgb,var(--foreground) 45%,var(--background))"></span><span class="palette" data-color="hub" style="color:var(--yellow)"></span><span class="palette" data-color="board" style="color:color-mix(in srgb,var(--green) 38%,var(--background))"></span><span class="palette" data-color="stock" style="color:color-mix(in srgb,var(--foreground) 35%,var(--background))"></span><span class="palette" data-color="screen" style="color:color-mix(in srgb,var(--foreground) 12%,var(--background))"></span><span class="palette" data-color="hole" style="color:color-mix(in srgb,var(--foreground) 12%,var(--background))"></span><span class="palette" data-color="metal" style="color:color-mix(in srgb,var(--foreground) 65%,var(--background))"></span><span class="palette" data-color="audio" style="color:var(--purple)"></span><span class="palette" data-color="battery" style="color:var(--green)"></span><span class="palette" data-color="grid" style="color:var(--border)"></span><span class="palette" data-color="text" style="color:var(--foreground)"></span><span class="palette" data-color="shade" style="color:var(--background)"></span><span class="palette" data-color="highlight" style="color:var(--ring)"></span>
+</div>
+<style>
+#rover-concept-a canvas{display:block;width:100%;height:480px;touch-action:none}
+#rover-concept-a .palette{display:none}
+#rover-concept-a .key{display:inline-block;width:10px;height:10px;margin-right:5px}
+#rover-concept-a .frame-key{background:var(--blue)}
+#rover-concept-a .mount-key{background:var(--orange)}
+#rover-concept-a .stock-key{background:color-mix(in srgb,var(--foreground) 35%,var(--background))}
+#rover-concept-a [data-detail]{min-height:3em;margin-top:10px}
+@media(max-width:480px){#rover-concept-a canvas{height:390px}}
+</style>
+<script>
+(()=>{
+ const root=document.getElementById('rover-concept-a');
+ const model=/*MODEL_DATA*/;
+ const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d');
+ const slider=root.querySelector('[data-explode]'),checkbox=root.querySelector('[data-electronics]');
+ const detail=root.querySelector('[data-detail]');
+ let yaw=-0.85,elevation=0.52,explode=0,components=true,selected=-1,polygons=[],width=736,height=480;
+ let down=null,moved=false; const palette={};
+ function colors(){root.querySelectorAll('[data-color]').forEach(e=>palette[e.dataset.color]=getComputedStyle(e).color)}
+ function project(v,level=0){const [x,y,z0]=v,z=z0+level*explode;const a=Math.cos(yaw),b=Math.sin(yaw),c=Math.cos(elevation),d=Math.sin(elevation);return {u:-b*x+a*y,v:-d*a*x-d*b*y+c*(z-65),depth:c*a*x+c*b*y+d*z}}
+ function draw(){
+   colors(); const dpr=Math.min(devicePixelRatio||1,2);width=canvas.clientWidth;height=canvas.clientHeight;
+   if(canvas.width!==Math.round(width*dpr)||canvas.height!==Math.round(height*dpr)){canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr)}
+   ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,width,height);
+   const shown=model.parts.map((p,i)=>({p,i})).filter(({p})=>components||['frame','mount','hole'].includes(p.category));
+   let loU=Infinity,hiU=-Infinity,loV=Infinity,hiV=-Infinity;
+   shown.forEach(({p})=>p.faces.forEach(f=>f.forEach(v=>{const q=project(v,p.level);loU=Math.min(loU,q.u);hiU=Math.max(hiU,q.u);loV=Math.min(loV,q.v);hiV=Math.max(hiV,q.v)})));
+   const scale=Math.min((width-36)/(hiU-loU),(height-62)/(hiV-loV));
+   const ox=width/2-(loU+hiU)*scale/2,oy=height/2+(loV+hiV)*scale/2;
+   function screen(v,level=0){let q=project(v,level);return [ox+q.u*scale,oy-q.v*scale]}
+   ctx.strokeStyle=palette.grid;ctx.lineWidth=0.6;ctx.globalAlpha=0.48;
+   for(let n=-140;n<=140;n+=20){for(const line of [[[n,-100,0],[n,100,0]],[[-140,n*0.7,0],[140,n*0.7,0]]]){let a=screen(line[0]),b=screen(line[1]);ctx.beginPath();ctx.moveTo(...a);ctx.lineTo(...b);ctx.stroke()}}
+   ctx.globalAlpha=1; polygons=[];
+   shown.forEach(({p,i})=>p.faces.forEach(f=>{
+     const q=f.map(v=>project(v,p.level));
+     const points=q.map(v=>[ox+v.u*scale,oy-v.v*scale]);
+     const v1=f[0],v2=f[1],v3=f[2],a=v2.map((v,j)=>v-v1[j]),b=v3.map((v,j)=>v-v1[j]);
+     const n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]],len=Math.hypot(...n)||1;
+     const light=Math.abs((n[0]*0.25-n[1]*0.4+n[2]*0.88)/len);
+     polygons.push({points,index:i,depth:q.reduce((s,v)=>s+v.depth,0)/q.length,color:palette[p.category],shade:0.05+(1-light)*0.24});
+   }));
+   polygons.sort((a,b)=>a.depth-b.depth);
+   for(const p of polygons){ctx.beginPath();p.points.forEach((q,i)=>i?ctx.lineTo(...q):ctx.moveTo(...q));ctx.closePath();ctx.fillStyle=p.color;ctx.fill();ctx.fillStyle=palette.shade;ctx.globalAlpha=p.shade;ctx.fill();ctx.globalAlpha=1;ctx.strokeStyle=p.index===selected?palette.highlight:palette.text;ctx.lineWidth=p.index===selected?1.7:0.4;ctx.globalAlpha=p.index===selected?1:0.19;ctx.stroke();ctx.globalAlpha=1}
+ }
+ function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{concept:'FNK0053 chassis A',view:{yaw,elevation},explode,components,selectedPart:selected>=0?model.parts[selected].name:null},privateContent:null}).catch(()=>{})}
+ function restore(s){if(!s?.modelContent||s.modelContent.concept!=='FNK0053 chassis A')return;const m=s.modelContent;if(m.view&&Number.isFinite(m.view.yaw)&&Number.isFinite(m.view.elevation)){yaw=m.view.yaw;elevation=Math.max(0.08,Math.min(1.57,m.view.elevation))}explode=Math.max(0,Math.min(45,Number(m.explode)||0));components=m.components!==false;slider.value=explode;checkbox.checked=components;root.querySelector('[data-explode-value]').textContent=explode+' mm'}
+ root.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>{const v=btn.dataset.view;[yaw,elevation]=v==='top'?[-Math.PI/2,Math.PI/2]:v==='side'?[-Math.PI/2,0.08]:[-0.85,0.52];root.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));draw();save()}));
+ slider.addEventListener('input',()=>{explode=Number(slider.value);root.querySelector('[data-explode-value]').textContent=explode+' mm';draw()});slider.addEventListener('change',save);
+ checkbox.addEventListener('change',()=>{components=checkbox.checked;selected=-1;draw();save()});
+ canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,elevation};moved=false;canvas.setPointerCapture(e.pointerId)});
+ canvas.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-down.x,dy=e.clientY-down.y;if(Math.hypot(dx,dy)>4)moved=true;if(moved){yaw=down.yaw-dx*0.009;elevation=Math.max(0.08,Math.min(1.57,down.elevation+dy*0.007));root.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed','false'));draw()}});
+ canvas.addEventListener('pointerup',e=>{if(!down)return;if(!moved){const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top;selected=-1;for(let i=polygons.length-1;i>=0;i--){const p=polygons[i];ctx.setTransform(1,0,0,1,0,0);ctx.beginPath();p.points.forEach((q,j)=>j?ctx.lineTo(...q):ctx.moveTo(...q));ctx.closePath();if(ctx.isPointInPath(x,y)){selected=p.index;break}}detail.textContent=selected<0?'Drag to rotate · select a part for details. Front is the camera end.':model.parts[selected].name+' — '+model.parts[selected].detail;draw()}down=null;save()});
+ canvas.addEventListener('pointercancel',()=>{down=null});
+ restore(window.openai?.widgetState);window.addEventListener('openai:set_globals',e=>{if(e.detail?.globals?.widgetState){restore(e.detail.globals.widgetState);draw()}});
+ new ResizeObserver(draw).observe(canvas);new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['class','style','data-theme']});draw();
+})();
+</script>
