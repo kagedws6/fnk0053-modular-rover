@@ -1,5 +1,7 @@
 # FNK0053 modular rover concept -- revision A
 
+Archived notes for the initial estimated layout. The current design is revision B; see `revision-b.md`. Revision A is retained in Git history.
+
 This is an appearance and packaging study, not a verified printable chassis.
 
 ## Proposed arrangement

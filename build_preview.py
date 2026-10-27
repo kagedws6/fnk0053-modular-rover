@@ -1,5 +1,6 @@
-"""Generate lightweight concept mesh and preview fragment; no external packages."""
+"""Generate revision B preview from shared mechanical profiles and measured kit positions."""
 import json, math
+from mechanical_layout import D,FRAME_BLANK,BOARD,DECK_BLANK,RIBBON,BRACKET_HOLES,BOARD_POSTS,SENSOR_POSTS,ACCESSORY_HOLES,DECK_ACCESSORY,extrude
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
@@ -37,71 +38,70 @@ def ring(l,w,r,th,z,h):
             f.append([[p[0],p[1],zz] for p,zz in points])
     return f
 
-add('Reinforced lower frame','frame',0,ring(238,132,13,12,46,8)+box(-10,0,50,8,108,8)+box(10,0,50,8,108,8),'Proposed 238 x 132 mm frame; open motor pockets. Board and bracket mounting details pending.')
-for x in [-62,62]:
-    for y in [-43,43]:
-        add('Motor bracket support tab','frame',0,plate(x,y,46,24,22,8,3),'Provisional support position; original metal brackets retained. Mounting holes await dimensions.')
-for x,label in [(-115,'Rear'),(115,'Front')]:
-    add(label+' replaceable bumper','mount',0,plate(x,0,44,14,132,12,5),'Separate replaceable bumper concept; attachment joint still to be designed.')
-for x in [-62,62]:
-    for y in [-83,83]:
-        add('Original wheel','wheel',0,cylinder(x,y,32.5,32.5,27,'y',40),'Estimated 65 mm diameter, 27 mm width; wheelbase assumed 124 mm.')
-        add('Wheel hub','hub',0,cylinder(x,y+(-13.7 if y<0 else 13.7),32.5,22,1.0,'y',28),'Stock wheel envelope, simplified hub.')
-        # Tread strips on outer circumference.
-        f=[]
-        for a in range(0,360,20):
-            t=math.radians(a);dt=0.032
-            f.append([[x+32.8*math.cos(t+d),y+yy,32.5+32.8*math.sin(t+d)] for d,yy in [(-dt,-12),(dt,-12),(dt,12),(-dt,12)]])
-        add('Tire tread','tread',0,f,'Simplified stock tire tread.')
-for x in [-49,49]:
-    for y in [-47,47]:
-        add('Original gearmotor','hub',0,box(x,y,32.5,58,22,20),'Motor housing envelope; shaft and bracket details unverified.')
-add('Freenove electronics shield','board',0.25,plate(0,0,56,210,124,2,5),'Simplified 210 x 124 mm envelope; actual board outline and mounting holes remain unverified.')
-add('Rear battery bay','stock',0.25,plate(-82,0,58,38,80,21,3),'Existing holder retained; rear area stays open for battery access.')
-for y in [-23,0,23]:
-    add('Battery bay opening','screen',0.25,box(-82,y,79.2,31,15,0.4),'Open rear battery access, schematic representation.')
-for x in [-40,40]:
-    for y in [-48,48]:
-        add('Deck standoff','metal',0.5,cylinder(x,y,73,3,30),'Concept supports only; mounting points pending confirmation.')
-add('Removable accessory deck','frame',1,plate(0,0,88,112,120,4,10),'112 x 120 x 4 mm proposed deck, with a 12 mm accessory grid and ribbon opening in CAD.')
-# Surface hole markers in the visualization; CAD contains true cut-through holes.
-f=[]
-for x in range(-42,43,12):
-    for y in range(-48,49,12):
-        f.append([[x+1.7*math.cos(a*math.pi/6),y+1.7*math.sin(a*math.pi/6),92.15] for a in range(12)])
-add('Deck accessory hole grid','hole',1,f,'Proposed M3 clearance holes on a 12 mm grid; shown as surface markers in this preview.')
-f=[]
-for x in range(-96,97,12):
-    for y in [-60,60]:
-        f.append([[x+1.7*math.cos(a*math.pi/6),y+1.7*math.sin(a*math.pi/6),54.15] for a in range(12)])
-add('Side accessory mounting row','hole',0,f,'Proposed M3 clearance row for future adapter plates.')
-add('Removable audio adapter','mount',1.5,cylinder(-6,-13,97.5,39,3),'Separate adapter; board-specific holes and microphone clearances pending.')
-add('Waveshare audio stack','audio',2,cylinder(-6,-13,108,35,12),'ESP32-S3-AUDIO-Board assembly; 70 mm diameter is an unverified envelope.')
-add('Audio top plate','metal',2,cylinder(-6,-13,114.75,35,1.5),'Simplified top plate from photos. Microphone and connector openings are not modeled.')
-add('Separate audio battery','battery',1,plate(-10,44,92,64,22,9,3),'Provisional 64 x 22 x 9 mm envelope; final cradle needs measured battery dimensions.')
-add('Separate speaker','stock',1,plate(37,42,92,24,24,8,3),'Existing small speaker retained; mount and acoustic openings pending.')
-add('Speaker cone','metal',1,cylinder(37,42,100.2,8,0.4),'Speaker face, simplified.')
-add('Existing pan and tilt servos','stock',0.5,plate(78,0,65,25,30,32,3),'Reuse existing head mechanism; motion sweep and cable clearance require checking.')
-add('Replaceable head adapter','frame',1,plate(82,0,98,30,45,5,4),'Front adapter can be replaced when a future face is added.')
-add('Camera and expression head','stock',1,box(98.5,0,120,7,56,60),'Existing camera/display head represented by a simplified 56 x 60 mm face.')
-add('Expression display','screen',1,box(102.2,0,129.5,0.4,48,25),'Existing expression display; face appearance is illustrative.')
+def planar_faces(p,h,z):
+    return extrude(p,h,z).triangles.round(3).tolist()
+
+add('Narrow-waist lower frame','frame',0,planar_faces(FRAME_BLANK,4,43.3),'Revision B: 244 x 132 mm maximum, 82 mm waist. Raised board leaves the motor loads on this carrier. Experimental; fit not verified.')
+for x,y in BOARD_POSTS:
+    add('PCB support boss','frame',0,cylinder(x,y,50.65,5,6.7),'New boss lifts the PCB bottom to 54 mm. Recessed underside screw head; fastener fit still needs checking.')
+for b in D['brackets']:
+    x=sum(p[0] for p in b['holes'])/2;y=sum(p[1] for p in b['holes'])/2
+    add('Original metal motor bracket','metal',0,box(x,y,32.3,14,5,22),'14 x 22 x 5 mm bracket envelope. Its confirmed chassis screw centers are 8 mm apart.')
+for x,sign in [(-116,-1),(116,1)]:
+    f=plate(x+sign*8.5,0,43.3,5,132,12,2)
+    for y in [-50,50]:f+=plate(x,y,47.3,16,14,4,2)
+    add(('Rear' if sign<0 else 'Front')+' replaceable bumper','mount',0,f,'Separate bumper with two upper mounting flanges. The assembled frame/bumper length is 254 mm; joint hardware is not physically checked.')
+for w in D['wheels']:
+    x,y,z=w['center'];width=w['size'][1]
+    add('Original wheel','wheel',0,cylinder(x,y,32.3,32.3,width,'y',40),'64.6 mm diameter and about 30 mm wide, positioned from the Freenove STEP. Total stock tire width is about 148.8 mm.')
+    add('Wheel hub','hub',0,cylinder(x,y+(-1 if y<0 else 1)*(width/2+.15),32.3,22,.5,'y',28),'Simplified wheel hub; position follows the measured tire envelope.')
+    f=[]
+    for a in range(0,360,20):
+        t=math.radians(a);dt=.03
+        f.append([[x+32.4*math.cos(t+d),y+yy,32.3+32.4*math.sin(t+d)] for d,yy in [(-dt,-width/2),(dt,-width/2),(dt,width/2),(-dt,width/2)]])
+    add('Tire tread','tread',0,f,'Illustrative tread on the measured wheel envelope.')
+for m in D['motors']:
+    add('Original gearmotor envelope','hub',0,box(*m['center'],*m['size']),'Measured conservative motor/shaft bounding box; its detailed shape is simplified in this preview.')
+add('Freenove electronics shield','board',.25,planar_faces(BOARD,1.6,54),'233.31 x 120.34 x 1.6 mm envelope, raised 10.7 mm from stock. Wheel/servo cutouts are simplified packaging geometry, not the exact PCB perimeter.')
+add('Open rear battery bay','stock',.25,plate(-81,0,55.6,42,80,21,3),'Rear battery access remains open. Holder envelope remains simplified.')
+for x in [-91,-72]:
+    add('Battery bay opening','screen',.25,box(x,0,76.8,14,67,.4),'Illustrative open battery slots; physical holder dimensions still require checking.')
+for x,y in BOARD_POSTS:
+    add('Original 28 mm deck standoff','metal',.5,cylinder(x,y,69.6,2.7,28),'Uses the stock deck hole pattern. Existing standoff height is retained above the raised PCB.')
+add('Removable accessory deck','frame',1,planar_faces(DECK_BLANK.difference(RIBBON),4,83.6),'Proposed 110 x 120 x 4 mm deck. Four stock mounting positions plus a 12 mm accessory grid; rear battery bay stays open.')
+def dots(points,z):
+    return [[[x+1.7*math.cos(a*math.pi/6),y+1.7*math.sin(a*math.pi/6),z] for a in range(12)] for x,y in points]
+add('Confirmed motor-bracket mounting pattern','hole',0,dots(BRACKET_HOLES,47.45),'Four measured pairs, each 8 mm center to center. Proposed printed clearance diameter is 3.4 mm.')
+add('Lower accessory and sensor holes','hole',0,dots(ACCESSORY_HOLES+SENSOR_POSTS,47.45),'Accessory row is a proposed 12 mm interface. Sensor mounts retain the original underside elevation.')
+add('Deck accessory grid','hole',1,dots(DECK_ACCESSORY+BOARD_POSTS,87.75),'Surface markers in preview; CAD/STLs contain true cut-through holes.')
+add('Removable audio adapter','mount',1.5,cylinder(-6,-13,93.1,39,3),'Separate adapter envelope, not yet an exact audio-board mount.')
+add('Waveshare audio stack','audio',2,cylinder(-6,-13,103.6,35,12),'Audio board diameter remains an unverified 70 mm envelope; microphone openings and connector geometry are pending.')
+add('Audio top plate','metal',2,cylinder(-6,-13,110.35,35,1.5),'Simplified top plate of the existing voice assembly.')
+add('Separate audio battery','battery',1,plate(-10,44,87.6,64,22,9,3),'Estimated battery envelope; not a verified cradle.')
+add('Separate speaker','stock',1,plate(37,42,87.6,24,24,8,3),'Estimated speaker envelope; acoustic mount still needs design.')
+add('Speaker cone','metal',1,cylinder(37,42,95.8,8,.4),'Illustrative speaker face.')
+add('Existing pan servo','stock',.5,box(83.56,0,50.5,32.8,12,30.2),'Stock SG90 envelope, relocated with the raised PCB. Servo/board opening remains a fit-check item.')
+for y in [-18,18]:
+    add('Head support arm','frame',1,box(85,y,84,12,4,38),'Proposed replaceable head support; head sweep and ribbon routing have not been checked.')
+add('Existing tilt servo','stock',1,box(89,0,88,25,12,30),'Simplified existing tilt stage; final adapter needs physical confirmation.')
+add('Camera and expression head','stock',1,box(110,0,118.2,7,56,60),'Existing head simplified as a 56 x 60 mm face; its mounting and motion are not manufacturing geometry.')
+add('Expression display','screen',1,box(113.7,0,127.7,.4,48,25),'Illustrative expression on the existing display.')
 for y0 in [-12,12]:
     f=[]
-    for dy,dz in [(-5,-1),(-2,2),(1,4),(4,2),(7,-1)]:
-        f+=box(102.6,y0+dy,129+dz,0.6,2.4,2.4)
-    add('Expression pixels','mount',1,f,'Illustrative friendly expression on existing display.')
-add('Camera','screen',1,cylinder(102.8,0,104,6,1.5,'x',24),'Front camera remains unobstructed; final head geometry will follow the existing parts.')
-add('Line tracking module','board',0,plate(100,0,16,28,62,4,3),'Existing underside sensor envelope; adjustable support still to be designed.')
-for y in [-22,0,22]:
-    add('Line tracking sensor','stock',0,box(102,y,14,7,7,4),'Sensor height must be preserved and checked on the assembled rover.')
+    for dy,dz in [(-5,-1),(-2,2),(1,4),(4,2),(7,-1)]:f+=box(114.1,y0+dy,127.2+dz,.6,2.4,2.4)
+    add('Expression pixels','mount',1,f,'Illustrative expression.')
+add('Camera','screen',1,cylinder(114.3,0,102.2,6,1.5,'x',24),'Camera opening remains clear in the concept; physical head sweep is pending.')
+sensor=D['sensor']
+add('Line tracking module envelope','board',0,box(*sensor['center'],*sensor['size']),'Original measured sensor envelope and ground clearance retained. Carrier sits at the stock mounting elevation.')
+for x,y in SENSOR_POSTS:
+    add('Original sensor standoff','metal',0,cylinder(x,y,29.3,2.7,28),'28 mm stock sensor supports retained below the frame instead of the raised PCB.')
 
-model=dict(revision='A',units='mm',status='Concept only -- dimensions and fit unverified',frame=[238,132],overall=[244,193,150],parts=parts)
+model=dict(revision='B',units='mm',status='Measured kit packaging; experimental chassis; fit unverified',frame=[244,132],overall=[254,148.823,148.2],parts=parts)
 raw=json.dumps(model,separators=(',',':'))
 (ROOT/'concept-model.json').write_text(raw,encoding='utf-8',newline='\n')
 template=(ROOT/'viewer-template.html').read_text(encoding='utf-8')
-html=template.replace('/*MODEL_DATA*/',raw)
+html=template.replace('/*MODEL_DATA*/',raw).replace('/*RENDERER*/',(ROOT/'scripts/preview-renderer.js').read_text(encoding='utf-8'))
 VIS.mkdir(parents=True,exist_ok=True)
 (VIS/'rover-chassis-concept.html').write_text(html,encoding='utf-8',newline='\n')
-assert '/*MODEL_DATA*/' not in html
 assert len(html.encode())<1000000
-print(json.dumps(dict(parts=len(parts),faces=sum(len(p['faces']) for p in parts),bytes=len(html.encode()),preview=str(VIS/'rover-chassis-concept.html'))))
+print(json.dumps(dict(revision='B',parts=len(parts),faces=sum(len(p['faces']) for p in parts),bytes=len(html.encode()))))

@@ -1,0 +1,71 @@
+{
+  "revision": "B",
+  "mesh_checks": [
+    {
+      "file": "experimental/frame-b-experimental.stl",
+      "watertight": true,
+      "connected_components": 1,
+      "dimensions_mm": [
+        244.0,
+        132.0,
+        10.7
+      ],
+      "volume_mm3": 53667.5,
+      "triangles": 17360
+    },
+    {
+      "file": "experimental/deck-b-experimental.stl",
+      "watertight": true,
+      "connected_components": 1,
+      "dimensions_mm": [
+        110.0,
+        120.0,
+        4.0
+      ],
+      "volume_mm3": 48882.82,
+      "triangles": 18876
+    },
+    {
+      "file": "fit-checks/motor-bracket-8mm-fit.stl",
+      "watertight": true,
+      "connected_components": 1,
+      "dimensions_mm": [
+        26.0,
+        20.0,
+        2.0
+      ],
+      "volume_mm3": 988.13,
+      "triangles": 724
+    }
+  ],
+  "tire_envelope_checks": [
+    {
+      "wheel": 0,
+      "frame_plan_clearance_mm": 3.2955,
+      "overlap_mm2": 0.0
+    },
+    {
+      "wheel": 1,
+      "frame_plan_clearance_mm": 3.2809,
+      "overlap_mm2": 0.0
+    },
+    {
+      "wheel": 2,
+      "frame_plan_clearance_mm": 3.1165,
+      "overlap_mm2": 0.0
+    },
+    {
+      "wheel": 3,
+      "frame_plan_clearance_mm": 3.4306,
+      "overlap_mm2": 0.0
+    }
+  ],
+  "pan_servo_plan_clearance_mm": 2.0,
+  "bracket_spacing_mm": 8,
+  "physical_fit_verified": false,
+  "limits": [
+    "No full assembly collision, head sweep, cable routing, strength or slicer validation.",
+    "Audio hardware dimensions remain estimates.",
+    "Experimental frame/deck require physical fit and fastener checks."
+  ]
+}

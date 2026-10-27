@@ -1,6 +1,7 @@
 """Render a static concept image from the generated mesh; requires Pillow."""
 from pathlib import Path
 import json,math
+import numpy as np
 from PIL import Image,ImageDraw,ImageFont
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -22,15 +23,30 @@ for p in model['parts']:
   n=[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];length=math.sqrt(sum(x*x for x in n)) or 1
   light=abs((n[0]*.25-n[1]*.4+n[2]*.88)/length);factor=.74+.26*light
   color=colors[p['category']];rgb=tuple(int(int(color[i:i+2],16)*factor) for i in [1,3,5])
-  faces.append((sum(v[2] for v in q)/len(q),[(ox+v[0]*scale,oy-v[1]*scale) for v in q],rgb))
-for _,f,c in sorted(faces,key=lambda x:x[0]):draw.polygon(f,fill=c,outline=tuple(max(0,n-16) for n in c))
+  faces.append(([(ox+v[0]*scale,oy-v[1]*scale,v[2]) for v in q],rgb))
+pixels=np.asarray(im).copy();depths=np.full((H,W),-np.inf)
+for face,color in faces:
+ for i in range(1,len(face)-1):
+  a,b,c=np.array([face[0],face[i],face[i+1]])
+  denominator=(b[1]-c[1])*(a[0]-c[0])+(c[0]-b[0])*(a[1]-c[1])
+  if abs(denominator)<1e-8:continue
+  x0=max(0,int(min(a[0],b[0],c[0])));x1=min(W-1,int(max(a[0],b[0],c[0]))+1)
+  y0=max(0,int(min(a[1],b[1],c[1])));y1=min(H-1,int(max(a[1],b[1],c[1]))+1)
+  if x1<x0 or y1<y0:continue
+  xx,yy=np.meshgrid(np.arange(x0,x1+1)+.5,np.arange(y0,y1+1)+.5)
+  u=((b[1]-c[1])*(xx-c[0])+(c[0]-b[0])*(yy-c[1]))/denominator
+  v=((c[1]-a[1])*(xx-c[0])+(a[0]-c[0])*(yy-c[1]))/denominator;w=1-u-v
+  zz=u*a[2]+v*b[2]+w*c[2];region=depths[y0:y1+1,x0:x1+1]
+  mask=(u>=0)&(v>=0)&(w>=0)&(zz>region+1e-6)
+  region[mask]=zz[mask];pixels[y0:y1+1,x0:x1+1][mask]=color
+im=Image.fromarray(pixels);draw=ImageDraw.Draw(im)
 def font(size):
  for name in ['arial.ttf','DejaVuSans.ttf','C:/Windows/Fonts/arial.ttf']:
   try:return ImageFont.truetype(name,size)
   except OSError:pass
  return ImageFont.load_default()
 draw.text((45,25),'FNK0053 MODULAR ROVER',font=font(34),fill='#202d39')
-draw.text((45,75),'Concept A | original hardware + replaceable frame and accessory deck',font=font(23),fill='#506174')
-draw.text((45,H-70),'238 x 132 mm proposed frame | dimensions and mounting fit unverified',font=font(22),fill='#506174')
+draw.text((45,75),'Revision B | original hardware + replaceable frame and accessory deck',font=font(23),fill='#506174')
+draw.text((45,H-70),'244 x 132 mm frame | STEP-based kit positions | prototype fit unverified',font=font(22),fill='#506174')
 draw.text((45,H-38),'Blue: frame/deck   Orange: adapters/bumpers   Other parts: existing hardware envelopes',font=font(18),fill='#506174')
-dest=ROOT/'docs'/'images'/'concept-a.png';dest.parent.mkdir(parents=True,exist_ok=True);im.save(dest);print(dest)
+dest=ROOT/'docs'/'images'/'revision-b.png';dest.parent.mkdir(parents=True,exist_ok=True);im.save(dest);print(dest)
