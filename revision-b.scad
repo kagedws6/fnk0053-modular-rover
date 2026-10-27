@@ -2,8 +2,10 @@
 // Units mm; +X front, Y side, Z up. Full chassis fit/strength not verified.
 // Run scripts/build_mechanics.py to regenerate the shared planar profiles.
 include <generated/profiles-b.scad>
+include <removable-cage.scad>
+show_cage=true;
 $fn=48;
-part="assembly"; // assembly, frame, deck, bumper, audio_adapter, bracket_coupon
+part="assembly"; // assembly, frame, deck, bumper, audio_adapter, bracket_coupon, cage_side, cage_foot, cage_roof, cage_frame
 explode=0;
 module rounded_plate(l,w,h,r=3){linear_extrude(h)hull()for(x=[-l/2+r,l/2-r],y=[-w/2+r,w/2-r])translate([x,y])circle(r);}
 module frame(){
@@ -18,7 +20,8 @@ module audio_adapter(){difference(){cylinder(d=78,h=3);translate([0,0,-1])cylind
 module bracket_coupon(){difference(){rounded_plate(26,20,2);for(x=[-4,4])translate([x,0,-1])cylinder(d=3.4,h=4);}}
 module wheel(w){translate(w[0])rotate([90,0,0]){color("#363d43")cylinder(d=64.6,h=w[1],center=true);color("#cfb657")cylinder(d=44,h=w[1]+.3,center=true);}}
 module assembly(){
- color("#2c879a")translate([0,0,43.3])frame();
+ color("#2c879a")translate([0,0,43.3])if(show_cage)cage_ready_frame();else frame();
+ if(show_cage)color("#dea353")translate([0,0,explode*2.5])removable_cage();
  for(s=[-1,1])translate([s*116,0,43.3])if(s<0)mirror([1,0,0])color("#dea353")bumper();else color("#dea353")bumper();
  for(w=wheel_envelopes)wheel(w);
  for(m=motor_envelopes)color("#cfb657")translate(m[0])cube(m[1],center=true);
@@ -40,4 +43,4 @@ module assembly(){
  color("#35584d")translate(sensor_envelope[0])cube(sensor_envelope[1],center=true);
  for(p=sensor_posts)color("#aaaa9f")translate([p[0],p[1],15.3])cylinder(d=5.4,h=28);
 }
-if(part=="assembly")assembly();else if(part=="frame")frame();else if(part=="deck")deck();else if(part=="bumper")bumper();else if(part=="audio_adapter")audio_adapter();else if(part=="bracket_coupon")bracket_coupon();
+if(part=="assembly")assembly();else if(part=="frame")frame();else if(part=="deck")deck();else if(part=="bumper")bumper();else if(part=="audio_adapter")audio_adapter();else if(part=="bracket_coupon")bracket_coupon();else if(part=="cage_side")cage_side_flat();else if(part=="cage_foot")cage_foot_flat();else if(part=="cage_roof")cage_roof_flat();else if(part=="cage_frame")cage_ready_frame();

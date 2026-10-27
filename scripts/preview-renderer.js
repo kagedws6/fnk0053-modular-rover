@@ -5,7 +5,7 @@
    colors();width=Math.round(canvas.clientWidth);height=Math.round(canvas.clientHeight);
    canvas.width=width;canvas.height=height;
    const rgba={};for(const key in palette){probeContext.clearRect(0,0,1,1);probeContext.fillStyle=palette[key];probeContext.fillRect(0,0,1,1);rgba[key]=probeContext.getImageData(0,0,1,1).data}
-   const shown=model.parts.map((p,i)=>({p,i})).filter(({p})=>frameOnly?(p.level===0&&['frame','mount','hole'].includes(p.category)):(components||['frame','mount','hole'].includes(p.category)));
+   const shown=model.parts.map((p,i)=>({p,i})).filter(({p})=>(cageOn||!p.cage)&&(frameOnly?(p.level===0&&['frame','mount','hole'].includes(p.category)):(components||['frame','mount','hole','cage'].includes(p.category))));
    let loU=Infinity,hiU=-Infinity,loV=Infinity,hiV=-Infinity;
    shown.forEach(({p})=>p.faces.forEach(f=>f.forEach(v=>{const q=project(v,p.level);loU=Math.min(loU,q.u);hiU=Math.max(hiU,q.u);loV=Math.min(loV,q.v);hiV=Math.max(hiV,q.v)})));
    const scale=Math.min((width-36)/(hiU-loU),(height-42)/(hiV-loV));

@@ -6,7 +6,9 @@ The longer-term goal is a mobile robot that can see, respond, and express itself
 
 **Current status: revision B, based on Freenove's STEP measurements. The full chassis is experimental and has not been physically fit-checked.** Kit dimensions and mounting locations now come from CAD; the new frame, fasteners, head support and audio mounts still need physical checks. The small fit coupons are measuring tools, not motor mounts.
 
-![Revision B assembly](docs/images/revision-b.png)
+![Revision B with removable cage](docs/images/removable-cage.png)
+
+An optional **removable cage** now adds two side hoops and two upper crossbars. Four dedicated base bolts release the complete cage. See the [cage parts and assembly guide](docs/removable-cage.md). It requires the matching carrier with mounting pads; fit, head movement and impact strength remain unverified.
 
 ## Revision B
 
@@ -73,6 +75,8 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 python fit-checks/build_gauges.py
 python scripts/build_mechanics.py
+python build_preview.py
+python scripts/build_cage.py
 python build_preview.py
 python scripts/export_preview.py
 python scripts/render_concept.py

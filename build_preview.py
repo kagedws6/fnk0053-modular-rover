@@ -96,7 +96,13 @@ add('Line tracking module envelope','board',0,box(*sensor['center'],*sensor['siz
 for x,y in SENSOR_POSTS:
     add('Original sensor standoff','metal',0,cylinder(x,y,29.3,2.7,28),'28 mm stock sensor supports retained below the frame instead of the raised PCB.')
 
-model=dict(revision='B',units='mm',status='Measured kit packaging; experimental chassis; fit unverified',frame=[244,132],overall=[254,148.823,148.2],parts=parts)
+from cage_layout import assembly_meshes
+for name,mesh in assembly_meshes():
+    is_pad=name=='Cage mounting pads'
+    add(name,'frame' if is_pad else 'cage',0 if is_pad else 2.5,mesh.triangles.round(3).tolist(),'Optional removable cage. Four dedicated base bolts release the complete assembly. Prototype; head sweep and impact resistance not verified.')
+    parts[-1]['cage']=True
+
+model=dict(revision='B+cage',units='mm',status='Measured kit packaging; experimental chassis; fit unverified',frame=[244,132],overall=[254,180,175],parts=parts)
 raw=json.dumps(model,separators=(',',':'))
 (ROOT/'concept-model.json').write_text(raw,encoding='utf-8',newline='\n')
 template=(ROOT/'viewer-template.html').read_text(encoding='utf-8')

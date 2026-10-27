@@ -6,7 +6,7 @@ from PIL import Image,ImageDraw,ImageFont
 
 ROOT=Path(__file__).resolve().parents[1]
 model=json.loads((ROOT/'concept-model.json').read_text())
-colors={'frame':'#2c879a','mount':'#dea353','wheel':'#454b54','tread':'#6c737b','hub':'#d7b653','board':'#35584d','stock':'#424b55','screen':'#152432','hole':'#152432','metal':'#aaa99f','audio':'#776b97','battery':'#73926b'}
+colors={'cage':'#dea353','frame':'#2c879a','mount':'#dea353','wheel':'#454b54','tread':'#6c737b','hub':'#d7b653','board':'#35584d','stock':'#424b55','screen':'#152432','hole':'#152432','metal':'#aaa99f','audio':'#776b97','battery':'#73926b'}
 W,H=1280,920;im=Image.new('RGB',(W,H),'#f3f5f7');draw=ImageDraw.Draw(im)
 yaw=-.85;elevation=.52
 def project(v):
@@ -46,7 +46,7 @@ def font(size):
   except OSError:pass
  return ImageFont.load_default()
 draw.text((45,25),'FNK0053 MODULAR ROVER',font=font(34),fill='#202d39')
-draw.text((45,75),'Revision B | original hardware + replaceable frame and accessory deck',font=font(23),fill='#506174')
-draw.text((45,H-70),'244 x 132 mm frame | STEP-based kit positions | prototype fit unverified',font=font(22),fill='#506174')
+draw.text((45,75),'Removable cage | four independent base bolts',font=font(23),fill='#506174')
+draw.text((45,H-70),'Optional cage: 248 x 180 x 175 mm | prototype fit and strength unverified',font=font(22),fill='#506174')
 draw.text((45,H-38),'Blue: frame/deck   Orange: adapters/bumpers   Other parts: existing hardware envelopes',font=font(18),fill='#506174')
-dest=ROOT/'docs'/'images'/'revision-b.png';dest.parent.mkdir(parents=True,exist_ok=True);im.save(dest);print(dest)
+dest=ROOT/'docs'/'images'/'removable-cage.png';dest.parent.mkdir(parents=True,exist_ok=True);im.save(dest);print(dest)

@@ -1,5 +1,13 @@
 # Progress log
 
+## Removable cage prototype - 2026-10-26
+
+- Added two side hoops, two roof crossbars and four feet; four base bolts release the assembled cage.
+- Added a compatible carrier with dedicated mounting pads and four printable STL designs.
+- Added editable cage geometry, mesh checks, static hardware-envelope intersection checks and an assembly guide.
+- Updated the interactive preview with a cage visibility toggle and a new assembly image.
+- Physical fit, head sweep, fastening access and impact strength remain unverified.
+
 ## Revision B - 2026-10-26
 
 - Replaced estimated wheel, board and bracket placement with STEP-derived dimensions.

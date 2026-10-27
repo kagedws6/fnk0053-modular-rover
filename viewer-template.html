@@ -1,46 +1,48 @@
-<div id="rover-concept-b">
-  <div class="viz-row"><h3>Modular rover · revision B</h3><span class="viz-badge">Fit unverified</span></div>
+<div id="rover-cage-b">
+  <div class="viz-row"><h3>Modular rover · removable cage</h3><span class="viz-badge">Fit unverified</span></div>
   <div class="viz-controls" aria-label="View controls">
     <button class="btn" type="button" data-view="perspective" aria-pressed="true">Three-quarter</button>
     <button class="btn" type="button" data-view="top" aria-pressed="false">Top</button>
     <button class="btn" type="button" data-view="side" aria-pressed="false">Side</button>
     <button class="btn" type="button" data-frame-only aria-pressed="false">Frame only</button>
+    <label class="form-check"><input class="form-check-input" type="checkbox" data-cage checked><span class="form-check-label">Cage</span></label>
     <label class="form-check"><input class="form-check-input" type="checkbox" data-electronics checked><span class="form-check-label">Components</span></label>
   </div>
   <canvas class="cursor-interaction" aria-label="Rotatable 3D concept of the rover chassis. Drag to rotate; select a component to read its description." role="img"></canvas>
   <div class="viz-controls"><label class="form-label">Separate layers <span class="tabular-nums" data-explode-value>0 mm</span><input class="form-range" data-explode type="range" min="0" max="45" value="0" step="1"></label></div>
-  <div class="viz-row text-small"><span><span class="key frame-key"></span>New frame &amp; deck</span><span><span class="key mount-key"></span>Replaceable adapters &amp; bumpers</span><span><span class="key stock-key"></span>Existing hardware</span></div>
+  <div class="viz-row text-small"><span><span class="key frame-key"></span>New frame &amp; deck</span><span><span class="key mount-key"></span>Removable parts</span><span><span class="key stock-key"></span>Existing hardware</span></div>
   <div class="text-small" data-detail aria-live="polite">Drag to rotate · select a part for details. Front is the camera end.</div>
-  <div class="text-small">Frame: 244 × 132 mm · kit positions from STEP · new parts and audio mounts need fit checks</div>
-  <span class="palette" data-color="frame" style="color:var(--blue)"></span><span class="palette" data-color="mount" style="color:var(--orange)"></span><span class="palette" data-color="wheel" style="color:color-mix(in srgb,var(--foreground) 30%,var(--background))"></span><span class="palette" data-color="tread" style="color:color-mix(in srgb,var(--foreground) 45%,var(--background))"></span><span class="palette" data-color="hub" style="color:var(--yellow)"></span><span class="palette" data-color="board" style="color:color-mix(in srgb,var(--green) 38%,var(--background))"></span><span class="palette" data-color="stock" style="color:color-mix(in srgb,var(--foreground) 35%,var(--background))"></span><span class="palette" data-color="screen" style="color:color-mix(in srgb,var(--foreground) 12%,var(--background))"></span><span class="palette" data-color="hole" style="color:color-mix(in srgb,var(--foreground) 12%,var(--background))"></span><span class="palette" data-color="metal" style="color:color-mix(in srgb,var(--foreground) 65%,var(--background))"></span><span class="palette" data-color="audio" style="color:var(--purple)"></span><span class="palette" data-color="battery" style="color:var(--green)"></span><span class="palette" data-color="grid" style="color:var(--border)"></span><span class="palette" data-color="text" style="color:var(--foreground)"></span><span class="palette" data-color="shade" style="color:var(--background)"></span><span class="palette" data-color="highlight" style="color:var(--ring)"></span>
+  <div class="text-small">Optional cage: 248 × 180 × 175 mm · four base bolts · prototype fit unverified</div>
+  <span class="palette" data-color="cage" style="color:var(--orange)"></span><span class="palette" data-color="frame" style="color:var(--blue)"></span><span class="palette" data-color="mount" style="color:var(--orange)"></span><span class="palette" data-color="wheel" style="color:color-mix(in srgb,var(--foreground) 30%,var(--background))"></span><span class="palette" data-color="tread" style="color:color-mix(in srgb,var(--foreground) 45%,var(--background))"></span><span class="palette" data-color="hub" style="color:var(--yellow)"></span><span class="palette" data-color="board" style="color:color-mix(in srgb,var(--green) 38%,var(--background))"></span><span class="palette" data-color="stock" style="color:color-mix(in srgb,var(--foreground) 35%,var(--background))"></span><span class="palette" data-color="screen" style="color:color-mix(in srgb,var(--foreground) 12%,var(--background))"></span><span class="palette" data-color="hole" style="color:color-mix(in srgb,var(--foreground) 12%,var(--background))"></span><span class="palette" data-color="metal" style="color:color-mix(in srgb,var(--foreground) 65%,var(--background))"></span><span class="palette" data-color="audio" style="color:var(--purple)"></span><span class="palette" data-color="battery" style="color:var(--green)"></span><span class="palette" data-color="grid" style="color:var(--border)"></span><span class="palette" data-color="text" style="color:var(--foreground)"></span><span class="palette" data-color="shade" style="color:var(--background)"></span><span class="palette" data-color="highlight" style="color:var(--ring)"></span>
 </div>
 <style>
-#rover-concept-b canvas{display:block;width:100%;height:480px;touch-action:none}
-#rover-concept-b .palette{display:none}
-#rover-concept-b .key{display:inline-block;width:10px;height:10px;margin-right:5px}
-#rover-concept-b .frame-key{background:var(--blue)}
-#rover-concept-b .mount-key{background:var(--orange)}
-#rover-concept-b .stock-key{background:color-mix(in srgb,var(--foreground) 35%,var(--background))}
-#rover-concept-b [data-detail]{min-height:3em;margin-top:10px}
-@media(max-width:480px){#rover-concept-b canvas{height:390px}}
+#rover-cage-b canvas{display:block;width:100%;height:480px;touch-action:none}
+#rover-cage-b .palette{display:none}
+#rover-cage-b .key{display:inline-block;width:10px;height:10px;margin-right:5px}
+#rover-cage-b .frame-key{background:var(--blue)}
+#rover-cage-b .mount-key{background:var(--orange)}
+#rover-cage-b .stock-key{background:color-mix(in srgb,var(--foreground) 35%,var(--background))}
+#rover-cage-b [data-detail]{min-height:3em;margin-top:10px}
+@media(max-width:480px){#rover-cage-b canvas{height:390px}}
 </style>
 <script>
 (()=>{
- const root=document.getElementById('rover-concept-b');
+ const root=document.getElementById('rover-cage-b');
  const model=/*MODEL_DATA*/;
  const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d');
  const slider=root.querySelector('[data-explode]'),checkbox=root.querySelector('[data-electronics]');
  const detail=root.querySelector('[data-detail]');
- let yaw=-0.85,elevation=0.52,explode=0,components=true,frameOnly=false,selected=-1,polygons=[],width=736,height=480;
+ let yaw=-0.85,elevation=0.52,explode=0,components=true,cageOn=true,frameOnly=false,selected=-1,polygons=[],width=736,height=480;
  let down=null,moved=false; const palette={};
  function colors(){root.querySelectorAll('[data-color]').forEach(e=>palette[e.dataset.color]=getComputedStyle(e).color)}
  function project(v,level=0){const [x,y,z0]=v,z=z0+level*explode;const a=Math.cos(yaw),b=Math.sin(yaw),c=Math.cos(elevation),d=Math.sin(elevation);return {u:-b*x+a*y,v:-d*a*x-d*b*y+c*(z-65),depth:c*a*x+c*b*y+d*z}}
 /*RENDERER*/
- function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{concept:'FNK0053 chassis B',view:{yaw,elevation},explode,components,frameOnly,selectedPart:selected>=0?model.parts[selected].name:null},privateContent:null}).catch(()=>{})}
- function restore(s){if(!s?.modelContent||s.modelContent.concept!=='FNK0053 chassis B')return;const m=s.modelContent;if(m.view&&Number.isFinite(m.view.yaw)&&Number.isFinite(m.view.elevation)){yaw=m.view.yaw;elevation=Math.max(0.08,Math.min(1.57,m.view.elevation))}explode=Math.max(0,Math.min(45,Number(m.explode)||0));components=m.components!==false;frameOnly=m.frameOnly===true;root.querySelector('[data-frame-only]').setAttribute('aria-pressed',String(frameOnly));slider.value=explode;checkbox.checked=components;root.querySelector('[data-explode-value]').textContent=explode+' mm'}
+ function save(){if(window.openai?.setWidgetState)window.openai.setWidgetState({modelContent:{concept:'FNK0053 chassis B cage',view:{yaw,elevation},explode,components,cageOn,frameOnly,selectedPart:selected>=0?model.parts[selected].name:null},privateContent:null}).catch(()=>{})}
+ function restore(s){if(!s?.modelContent||s.modelContent.concept!=='FNK0053 chassis B cage')return;const m=s.modelContent;if(m.view&&Number.isFinite(m.view.yaw)&&Number.isFinite(m.view.elevation)){yaw=m.view.yaw;elevation=Math.max(0.08,Math.min(1.57,m.view.elevation))}explode=Math.max(0,Math.min(45,Number(m.explode)||0));components=m.components!==false;cageOn=m.cageOn!==false;root.querySelector('[data-cage]').checked=cageOn;frameOnly=m.frameOnly===true;root.querySelector('[data-frame-only]').setAttribute('aria-pressed',String(frameOnly));slider.value=explode;checkbox.checked=components;root.querySelector('[data-explode-value]').textContent=explode+' mm'}
  root.querySelectorAll('[data-view]').forEach(btn=>btn.addEventListener('click',()=>{const v=btn.dataset.view;[yaw,elevation]=v==='top'?[-Math.PI/2,Math.PI/2]:v==='side'?[-Math.PI/2,0.08]:[-0.85,0.52];root.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));draw();save()}));
  root.querySelector('[data-frame-only]').addEventListener('click',()=>{frameOnly=!frameOnly;selected=-1;root.querySelector('[data-frame-only]').setAttribute('aria-pressed',String(frameOnly));draw();save()});
  slider.addEventListener('input',()=>{explode=Number(slider.value);root.querySelector('[data-explode-value]').textContent=explode+' mm';draw()});slider.addEventListener('change',save);
+ root.querySelector('[data-cage]').addEventListener('change',()=>{cageOn=root.querySelector('[data-cage]').checked;selected=-1;draw();save()});
  checkbox.addEventListener('change',()=>{components=checkbox.checked;selected=-1;draw();save()});
  canvas.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY,yaw,elevation};moved=false;canvas.setPointerCapture(e.pointerId)});
  canvas.addEventListener('pointermove',e=>{if(!down)return;const dx=e.clientX-down.x,dy=e.clientY-down.y;if(Math.hypot(dx,dy)>4)moved=true;if(moved){yaw=down.yaw-dx*0.009;elevation=Math.max(0.08,Math.min(1.57,down.elevation+dy*0.007));root.querySelectorAll('[data-view]').forEach(b=>b.setAttribute('aria-pressed','false'));draw()}});
