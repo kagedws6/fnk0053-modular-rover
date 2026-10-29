@@ -10,6 +10,13 @@ The longer-term goal is a mobile robot that can see, respond, and express itself
 
 An optional **removable cage** now adds two side hoops and two upper crossbars. Four dedicated base bolts release the complete cage. See the [cage parts and assembly guide](docs/removable-cage.md). It requires the matching carrier with mounting pads; fit, head movement and impact strength remain unverified.
 
+## Software checkpoint - 2026-10-29
+
+- [Rover firmware fork](https://github.com/kagedws6/Freenove_4WD_Car_Kit_for_ESP32): command expiry, bounded parsing, PWM limits and ramps, and local Wi-Fi setup are built and flashed. Host tests and network rejection/reconnection checks passed with zero commanded motor output; a camera frame decoded successfully. See the [control notes](https://github.com/kagedws6/Freenove_4WD_Car_Kit_for_ESP32/blob/master/docs/modular-rover-control.md).
+- [Voice firmware fork](https://github.com/kagedws6/xiaozhi-esp32): the unchanged Waveshare audio-board baseline is built and flashed; Wi-Fi reconnect, activation, wake word and one spoken exchange are confirmed. See the [baseline notes](https://github.com/kagedws6/xiaozhi-esp32/blob/main/docs/rover-voice-baseline.md).
+
+Physical driving and the voice-to-rover bridge remain pending. Private firmware backups, credentials, serial logs and camera captures are not published.
+
 ## Revision B
 
 - Measured 233.31 x 120.34 x 1.6 mm PCB envelope and 64.6 mm wheels.
